@@ -4,6 +4,9 @@ package com.example.demo.controllers;
 import com.example.demo.entities.Product;
 import com.example.demo.services.ProductService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,7 +24,7 @@ public class ProductController {
     private final ProductService service;;
 
     @GetMapping("")
-    public String getProducts(Model model) {
+    public String getAllProducts(Model model) {
         model.addAttribute("products", service.findAll());
 
         return "product_list";
@@ -38,7 +41,6 @@ public class ProductController {
     @GetMapping("/searchByPrice")
     public String searchProductsByPrice(@RequestParam(defaultValue = "10.0") BigDecimal lower,
                                         @RequestParam(defaultValue = "9999.0") BigDecimal upper, Model model) {
-
         List<Product> products = service.findByPriceBetween(lower, upper);
 
         model.addAttribute("products", products);
@@ -47,4 +49,19 @@ public class ProductController {
 
         return "product_list";
     }
+
+    @GetMapping("/page")
+    public String getProductsPaging(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            Model model) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Product> pages = service.findAll(pageable);
+
+        model.addAttribute("pages",  pages);
+        model.addAttribute("currentPage", pages.getNumber());
+        model.addAttribute("totalPages", pages.getTotalPages());
+        return "product_list_paging";
+    }
+
 }

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Product List</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container my-4">
+    <h2 class="text-center mb-4">Product List #<span th:text="${currentPage}"></span> of <span th:text="${totalPages}"></span></h2>
+
+    <form class="m-4" method="get" action="/products/page">
+        <label >Filter Product</label>
+        <input type="number"  name="page" min="1" max="9999" th:value="${currentPage}">
+        <input type="number"  name="size" min="1" max="9999" th:value="${pages.getPageable().getPageSize()}">
+        <button type="submit">Search</button>
+    </form>
+    <div class="row font-weight-bold bg-light" th:if="${pages.content.isEmpty() || pages.content == null}">
+        <h2 class="text-danger text-center">This product doesn't existed</h2>
+    </div>
+    <div class="row font-weight-bold bg-light" th:unless="${pages.content.isEmpty() || pages.content == null}">
+        <div class="col-2">Product Code</div>
+        <div class="col-2">Product Name</div>
+        <div class="col-2">Product Line</div>
+        <div class="col-2">Scale</div>
+        <div class="col-2">Price</div>
+        <div class="col-3">Vendor</div>
+    </div>
+    <div class="row" th:each="p : ${pages.content}">
+        <div class="col-2" th:text="${p.productCode}"></div>
+        <div class="col-2" th:text="${p.productName}"></div>
+        <div class="col-2" th:text="${p.productLine.productLine}"></div>
+        <div class="col-2" th:text="${p.productScale}"></div>
+        <div class="col-2" th:text="${p.buyPrice}"></div>
+        <div class="col-3" th:text="${p.productVendor}"></div>
+    </div>
+</div>
+
+</body>
+</html>
