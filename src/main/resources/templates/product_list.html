@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Product List</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container my-4">
+    <form class="flex item-center" method="get" action="/products/search">
+        <label for="productCode">Search product</label>
+        <input type="text" id="productCode" placeholder="Enter here" name="searchParam">
+        <button type="submit">Search</button>
+    </form>
+
+    <form class="mx-4" method="get" action="/products/searchByPrice">
+        <label >Filter Product</label>
+        <input type="number"  name="lower" min="1" max="9999" th:value="${lower}">
+        <input type="number"  name="upper" min="1" max="9999" th:value="${upper}">
+        <button type="submit">Search</button>
+    </form>
+    <h2 class="text-center mb-4">Product List</h2>
+    <div class="row font-weight-bold bg-light" th:if="${products.isEmpty() || products == null}">
+        <h2 class="text-danger text-center">This product doesn't existed</h2>
+    </div>
+    <div class="row font-weight-bold bg-light" th:unless="${products == null || products.isEmpty()}">
+        <div class="col-2">Product Code</div>
+        <div class="col-2">Product Name</div>
+        <div class="col-2">Product Line</div>
+        <div class="col-2">Scale</div>
+        <div class="col-2">Price</div>
+        <div class="col-3">Vendor</div>
+    </div>
+    <div class="row" th:each="p : ${products}">
+        <div class="col-2" th:text="${p.productCode}"></div>
+        <div class="col-2" th:text="${p.productName}"></div>
+        <div class="col-2" th:text="${p.productLine.productLine}"></div>
+        <div class="col-2" th:text="${p.productScale}"></div>
+        <div class="col-2" th:text="${p.buyPrice}"></div>
+        <div class="col-3" th:text="${p.productVendor}"></div>
+    </div>
+</div>
+
+</body>
+</html>
